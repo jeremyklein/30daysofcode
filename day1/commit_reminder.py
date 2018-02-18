@@ -23,7 +23,8 @@ def commit_count_for_date(username,search_date):
 	url = "https://api.github.com/search/commits?q=author:%s+author-date:%s" %(username, search_date)
  	headers = {'Accept': 'application/vnd.github.cloak-preview'}
 	github_search = r.get(url, headers=headers)
-	daily_commit_count = json.loads(github_search.content)["total_count"]
+	print(type(github_search.content))
+	daily_commit_count = github_search.json()["total_count"]
 	return daily_commit_count
 
 
