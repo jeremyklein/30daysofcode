@@ -2,6 +2,7 @@ import requests as r
 import json, datetime
 from pytz import timezone
 from twilio.rest import Client
+from bs4 import BeautifulSoup
 
 with open("creds.json") as creds_json:
 	creds = json.load(creds_json)
@@ -22,12 +23,15 @@ def check_commits_today(username):
 
 
 def commit_count_for_date(username,search_date):
-	url = "https://api.github.com/search/commits?q=author:%s+author-date:%s" %(username, search_date)
- 	headers = {'Accept': 'application/vnd.github.cloak-preview'}
-	github_search = r.get(url, headers=headers)
-	daily_commit_count = github_search.json()["total_count"]
-	return daily_commit_count
-
+	# scrape the github page, and check commit streak display
+	url = "https://github.com/%s" % username
+	response = r.get(url)
+	html_doc = response.content
+	soup = BeautifulSoup(html_doc, 'html.parser')
+	rectangles = soup.find_all('rect')
+	for rectangle in rectangles:
+		if rectangle['data-date'] == search_date:
+			return int(rectangle['data-count'])
 
 def send_text(message):
 	sid = creds["sid"]
