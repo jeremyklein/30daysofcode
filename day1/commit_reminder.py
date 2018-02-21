@@ -9,23 +9,29 @@ with open("creds.json") as creds_json:
 
 def main():
 	username = creds["github_username"]
-	# send_text(check_commits_today(username))
-	check_commit_streak_today(username)
+	commit_streak = check_commit_streak_today(username)
+	if check_commits_today(username) > 0:
+		message = "Nice work on your %s day streak!" % commit_streak
+	else:
+		if commit_streak > 0:
+			message = "Keep your %s day streak alive!" % commit_streak
+		else:
+			message = "WTF mate!?! Stop slacking!!"
+	send_text(message)
+	
 
 def check_commits_today(username):
 	tz = timezone('EST')
 	today = datetime.datetime.now(tz).strftime('%Y-%m-%d')
 	commit_count_today = commit_count_for_date(username,today)
-	if commit_count_today == 0:
-		return("No commits today mate... WTF!?!")
-	else:
-		return("Keep up the good work today mate!")
+	return commit_count_today
 
 def check_commit_streak_today(username):
 	tz = timezone('EST')
 	today = datetime.datetime.now(tz).strftime('%Y-%m-%d')	
 	commit_streak = commit_streak_for_date(username,today)
-	print(commit_streak) 
+	return commit_streak
+
 
 def commit_count_for_date(username,search_date):
 	# scrape the github page, and check commit streak display
