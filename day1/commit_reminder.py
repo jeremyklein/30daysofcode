@@ -55,12 +55,12 @@ def commit_streak_for_date(username,search_date):
 	streak = 0
 	for rectangle in rectangles:
 		if int(rectangle['data-count']) > 0:
-			streak += 1
-		else:
+			streak += 1	
 			if rectangle['data-date'] == search_date:
-				return streak	
-			else:
-				streak = 0
+				return streak
+		else:
+			streak = 0
+	return streak
 
 
 def send_text(message):
