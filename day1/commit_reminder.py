@@ -54,10 +54,12 @@ def commit_streak_for_date(username,search_date):
 	rectangles = soup.find_all('rect')
 	streak = 0
 	for rectangle in rectangles:
+		if rectangle['data-date'] == search_date:
+			if int(rectangle['data-count']) > 0:
+				streak += 1	
+			return streak
 		if int(rectangle['data-count']) > 0:
 			streak += 1	
-			if rectangle['data-date'] == search_date:
-				return streak
 		else:
 			streak = 0
 	return streak
